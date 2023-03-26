@@ -10,13 +10,14 @@ on:
   pull_request:
     branches: [ "main" ]
 
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  # This workflow contains a single job called "build-app"
+  build-app:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -27,10 +28,29 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
         run: |
-          echo Add other actions to build,
+          echo Add another action to build for parallel job1!
           echo test, and deploy your project.
+
+  build-api:
+    runs-on: windows-latest
+    steps:
+      - run: echo "Hello World from parallel job2!"
+
+  build-db: 
+    needs: build-app
+    runs-on: windows-latest
+    steps:
+      - run: echo "Hello World"
+  
+  package: 
+    needs: [build-app, build-db]
+    runs-on: macos-latest
+    steps:
+      - run: echo "Hello macOs"
+
+
+
+
+
+    
